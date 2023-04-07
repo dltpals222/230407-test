@@ -1,43 +1,56 @@
 import http from 'http'
 import fs from 'fs'
-import path, { resolve } from 'path'
-import dateTime from './dateTime.js'
+import url from 'url'
+
+function serverReadFile (res, path, contenttype, resCode){
+  fs.readFile(path,(err,data) => {
+    if(err){
+      res.writeHead(500, {'content-type':'text/html; charset=utf-8'});
+      res.write('500 인터넷에 문제가 있습니다');
+      res.end();
+    } else {
+      res.writeHead(resCode, {'content-type':`${contenttype}; charset=utf-8`});
+      res.write(data);
+      res.end();
+    }
+})}
+
 
 class Server {
-  constructor(data){
-    this.data = data
+  constructor(port){
+    this.port = port
   }
-
-  get clockinit(){
-    `${date}`
-  }
-
 
   start(){
     http.createServer((req,res)=>{
-      const url = req.url;
-      const method = req.method;
-      console.log(url);
-
-      fs.readFile(path.join(resolve(),'index.html'),(data,err) => {
-        if(err){
-          res.writeHead(500, {'content-type':'text/html; charset=utf-8'});
-          res.write('500 인터넷에 문제가 있습니다');
-          res.end();
-        } else {
-          res.writeHead(200, {'content-type':'text.html; charset=utf-8'})
-          res.end(data)
-        }
-      })//fs.readFile끝
-    }).listen(3050, (err) => {
-      if(err){
-        console.error('3050포트 에러',err)
-      } else {
-        console.log('3050 포트 정상작동중')
+      const serverurl = url.parse(req.url, true);
+      const urlPathName = serverurl.pathname;
+      
+      switch(urlPathName){
+        case '/':
+          serverReadFile(res,'index.html','text/html',200);
+        break;
+        case '/index.js':
+          serverReadFile(res,'index.js','text/javascript',200);
+        break;
+        case '/favicon.ico':
+          err => {if(err){throw err}};
+        break;
+        default:
+          console.log(serverurl);
+        break;
       }
-    }) //httpcreateserver 끝
-  } //start 끝
-} //server 끝
+    
+    }).listen(this.port, err => {
+      if(err){
+          console.error('3050포트 에러',err);
+        } else {
+          console.log('3050 포트 정상작동중');
+        };
+    });
+    
+  };
+};
 
-const server = new Server(123);
+const server = new Server(3050);
 server.start();
