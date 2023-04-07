@@ -9,6 +9,16 @@ function tagMakeCall (parentName, tagName, callback){
   return element
 }
 
+const h1Clock = tagMakeCall(root, 'h1', function(element){
+  element.setAttribute('id','h1-clock')
+  element.style.width = '100vw'
+  element.style.height = '100vh'
+  element.style.display = 'flex'
+  element.style.justifyContent = 'center'
+  element.style.alignItems = 'center'
+})
+
+
 function dateSetOne (){
   const dataA = new Date();
   let dateTime = {
@@ -54,23 +64,13 @@ function dateSetOne (){
       break;
     }
   
-  const front = `${dateTime.year}-${dateTime.month}-${dateTime.date} ${ampm} ${dateTime.hour}시 ${dateTime.minute}분 ${dateTime.second}초 ${dayA}`
-
-  const h1Cliock = document.getElementById('h1-clock')
-  h1Cliock.innerHTML = front;
+    const front = `${dateTime.year}-${dateTime.month}-${dateTime.date} ${ampm} ${dateTime.hour}시 ${dateTime.minute}분 ${dateTime.second}초 ${dayA}`
   
+    h1Clock.innerHTML = front;
+  }
   
-}
 
 
-tagMakeCall(root, 'h1', function(element){
-  element.setAttribute('id','h1-clock')
-  element.style.width = '100vw'
-  element.style.height = '100vh'
-  element.style.display = 'flex'
-  element.style.justifyContent = 'center'
-  element.style.alignItems = 'center'
-})
 
 
 
